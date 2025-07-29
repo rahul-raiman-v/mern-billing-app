@@ -1,4 +1,4 @@
-import { Button } from "../ui";
+import { ButtonComponent } from "../button";
 import { SelectComponent } from "./selectComponent";
 
 export const BillModal = ({
@@ -31,18 +31,16 @@ export const BillModal = ({
               />
             </p>
             <div className="flex flex-row gap-6 justify-center items-center">
-              <Button
-                className="bg-blue-500 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700"
-                onClick={() => setIsModal(false)}
-              >
+              <ButtonComponent className="" onClick={() => setIsModal(false)}>
                 Place Order
-              </Button>
-              <Button
-                className="bg-red-500 text-white px-4 py-2 rounded-md font-medium hover:bg-red-700"
+              </ButtonComponent>
+              <ButtonComponent
+                className=""
+                variant="secondary"
                 onClick={() => setIsModal(false)}
               >
                 Close
-              </Button>
+              </ButtonComponent>
             </div>
           </div>
         </div>

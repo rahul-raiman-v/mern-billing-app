@@ -1,20 +1,21 @@
 import React from "react";
-import { Button, Input } from "../ui";
+import { Input } from "../ui";
 import { CircleX } from "lucide-react";
-import { ItemCard } from "./itemCard";
 import { items } from "../../data/items";
+import { ItemCard } from "../card/itemCard";
+import { ButtonComponent } from "../button";
 
 export const ItemsDrawer = () => {
   const [open, setOpen] = React.useState(false);
 
   return (
     <div className="">
-      <Button
-        className="bg-blue-500 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-600"
+      <ButtonComponent
+        className="whitespace-nowrap"
         onClick={() => setOpen(true)}
       >
         Add Item
-      </Button>
+      </ButtonComponent>
       {open && (
         <div className="fixed inset-0 bg-black bg-opacity-20 z-40 flex items-center justify-center">
           <div
@@ -37,13 +38,7 @@ export const ItemsDrawer = () => {
             </div>
             <div className="flex flex-wrap gap-4">
               {items.map((item) => (
-                <ItemCard
-                  key={item.id}
-                  title={item.name}
-                  category={item.category}
-                  image={item.image}
-                  price={item.price}
-                />
+                <ItemCard key={item.id} item={item} />
               ))}
             </div>
           </div>

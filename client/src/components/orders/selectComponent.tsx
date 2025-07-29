@@ -13,15 +13,25 @@ export const SelectComponent = ({
   placeholder = "",
   className,
   selectLabel = "Customers",
+  value,
+  onValueChange,
+  initialValue = "",
 }: {
   selectItems?: { name: string; value: string }[];
   placeholder: string;
   className?: string;
   selectLabel?: string;
+  value?: string;
+  initialValue?: string;
+  onValueChange?: (value: string) => void;
 }) => {
   return (
-    <Select>
-      <SelectTrigger className={`w-full ${className}`}>
+    <Select
+      value={value}
+      onValueChange={onValueChange}
+      defaultValue={initialValue}
+    >
+      <SelectTrigger className={`w-full font-semibold ${className}`}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent className={`w-full ${className}`}>
@@ -32,9 +42,9 @@ export const SelectComponent = ({
               (customer: { name: string; value: string }, idx: number) => {
                 return (
                   <SelectItem
-                    key={idx}
+                    key={customer.value + idx}
                     value={customer.value}
-                    className="text-gray-950 font-semibold"
+                    className="text-gray-950 font-semibold cursor-pointer"
                   >
                     {customer.name}
                   </SelectItem>
