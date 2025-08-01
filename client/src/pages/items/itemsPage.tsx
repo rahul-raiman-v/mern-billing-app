@@ -7,6 +7,9 @@ import { ItemsModal } from "../../components/modals/itemsModal";
 import { ItemsForm } from "../../components/forms/itemsForm";
 import { useItemsStore } from "../../zustand/items";
 import toast from "react-hot-toast";
+import type { Items } from "../../zustand/items/types";
+import { NoDatas } from "../../assets/noData";
+import { LoaderComponent } from "../../components/loader";
 
 export const ItemsPage = () => {
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -14,53 +17,40 @@ export const ItemsPage = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
 
   const items = useItemsStore((s) => s.items);
-  // const page = useItemsStore(s => s.page);
-  // const pageSize = useItemsStore(s=>s.pageSize);
-  // const start = useItemsStore(s=>s.start);
-  // const end = useItemsStore(s=>s.end);
-  const setEditItem = useItemsStore((s) => s.setEditItem);
-  const handleEditItem = useItemsStore((s) => s.handleEditItem);
-  const editItem = useItemsStore((s) => s.editItem);
   const deleteItem = useItemsStore((s) => s.deleteItem);
   const unit = useItemsStore((s) => s.unit);
   const setUnit = useItemsStore((s) => s.setUnit);
-  // const setPageSize = useItemsStore(s=>s.setPageSize);
-  // const setPage = useItemsStore(s=>s.setPage);
-  // const setStart = useItemsStore(s=>s.setStart);
-  // const setItem = useItemsStore(s=>s.setItem);
-  // const setEnd = useItemsStore(s=>s.setEnd);
-
-  const [itemDetails, setItemDetails] = React.useState(
-    editItem ?? {
-      id: "",
-      title: "",
-      price: {
-        piecePrice: "",
-        packPrice: "",
-        rollPrice: "",
-      },
-      image: "",
-      quantity: 0,
-    },
-  );
+  const item = useItemsStore((s) => s.item);
+  const setItem = useItemsStore((s) => s.setItem);
+  const createItem = useItemsStore((s) => s.createItem);
+  const getItems = useItemsStore((s) => s.getItems);
+  const setEditId = useItemsStore((s) => s.setEditId);
+  const updateItem = useItemsStore((s) => s.updateItem);
+  const isLoading = useItemsStore((s) => s.isLoading);
 
   React.useEffect(() => {
-    if (editItem) {
-      setItemDetails(editItem);
+    if (item) {
+      setItem("all", item);
     } else {
-      setItemDetails({
+      setItem("all", {
         id: "",
-        title: "",
-        price: {
-          piecePrice: "",
-          packPrice: "",
-          rollPrice: "",
-        },
+        name: "",
+        price: 0,
         image: "",
         quantity: 0,
+        units: [
+          {
+            name: "piece",
+            conversionFactor: 1,
+          },
+        ],
       });
     }
-  }, [editItem, editModalOpen]);
+  }, [setItem, editModalOpen, item]);
+
+  React.useEffect(() => {
+    getItems();
+  }, [getItems]);
 
   const selectOptions = [
     {
@@ -78,44 +68,53 @@ export const ItemsPage = () => {
   ];
 
   const filteredItems = items.filter((item) =>
-    item.title.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase()),
+    item.name.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase()),
   );
 
   function handleAddItem() {
-    if (itemDetails.title.trim() !== "" && itemDetails.quantity > 0) {
-      setItem(itemDetails);
-      setItemDetails({
+    if (item?.name.trim() !== "" && item?.quantity && item?.quantity > 0) {
+      createItem(item);
+      setItem("all", {
         id: "",
-        title: "",
-        price: {
-          piecePrice: "",
-          packPrice: "",
-          rollPrice: "",
-        },
+        name: "",
+        price: 0,
         image: "",
         quantity: 0,
+        units: [
+          {
+            name: "piece",
+            conversionFactor: 1,
+          },
+        ],
       });
     } else {
       toast.error("Fill all the fields.");
     }
   }
   function handleEditItemChange() {
-    if (itemDetails.title.trim() !== "" && itemDetails.quantity > 0) {
-      handleEditItem?.(itemDetails);
-      setItemDetails({
+    if (item?.name.trim() !== "" && item?.quantity && item?.quantity > 0) {
+      updateItem(item);
+      setItem("all", {
         id: "",
-        title: "",
-        price: {
-          piecePrice: "",
-          packPrice: "",
-          rollPrice: "",
-        },
+        name: "",
+        price: 0,
         image: "",
         quantity: 0,
+        units: [
+          {
+            name: "piece",
+            conversionFactor: 1,
+          },
+        ],
       });
     } else {
       toast.error("Fill all the fields.");
     }
+  }
+
+  function handleEditItem(item: Items) {
+    setEditId?.(item?.id);
+    setItem("all", item);
   }
 
   return (
@@ -130,16 +129,18 @@ export const ItemsPage = () => {
         />
         <ButtonComponent
           onClick={() => {
-            setItemDetails({
+            setItem("all", {
               id: "",
-              title: "",
-              price: {
-                piecePrice: "",
-                packPrice: "",
-                rollPrice: "",
-              },
+              name: "",
+              price: 0,
               image: "",
               quantity: 0,
+              units: [
+                {
+                  name: "piece",
+                  conversionFactor: 1,
+                },
+              ],
             });
             setModalOpen(true);
           }}
@@ -149,11 +150,23 @@ export const ItemsPage = () => {
           Add Item
         </ButtonComponent>
       </div>
+
+      {filteredItems.length === 0 &&
+        (isLoading ? (
+          <LoaderComponent />
+        ) : (
+          <div className="flex items-center justify-center flex-col h-full">
+            <NoDatas className="size-[30rem]" />
+            <p className="font-semibold text-lg text-gray-700">
+              No Items Found
+            </p>
+          </div>
+        ))}
       <div className="flex flex-wrap gap-4 items-center">
         {filteredItems.map((item) => {
           return (
             <ItemCard
-              onEdit={setEditItem}
+              onEdit={handleEditItem}
               onDelete={deleteItem}
               key={item.id}
               item={item}
@@ -169,8 +182,8 @@ export const ItemsPage = () => {
         setModalOpen={setModalOpen}
       >
         <ItemsForm
-          itemDetails={itemDetails}
-          setItemDetails={setItemDetails}
+          itemDetails={item}
+          setItemDetails={setItem}
           selectOptions={selectOptions}
           setUnit={setUnit}
           unit={unit}
@@ -183,8 +196,8 @@ export const ItemsPage = () => {
         setModalOpen={setEditModalOpen}
       >
         <ItemsForm
-          itemDetails={itemDetails}
-          setItemDetails={setItemDetails}
+          itemDetails={item}
+          setItemDetails={setItem}
           selectOptions={selectOptions}
           setUnit={setUnit}
           unit={unit}

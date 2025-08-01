@@ -32,11 +32,9 @@ export const CustomerPage = () => {
   ];
 
   const customers = useCustomersStore((s) => s.customers);
-  const setCustomer = useCustomersStore((s) => s.setCustomer);
   const deleteCustomer = useCustomersStore((s) => s.deleteCustomer);
-  const setEditCustomer = useCustomersStore((s) => s.setEditCustomer);
-  const editCustomer = useCustomersStore((s) => s.editCustomer);
-  const handleEditCustomer = useCustomersStore((s) => s.handleEditCustomer);
+  const setCustomer = useCustomersStore((s) => s.setCustomer);
+  const customer = useCustomersStore((s) => s.customer);
   const page = useCustomersStore((s) => s.page);
   const setPage = useCustomersStore((s) => s.setPage);
   const pageSize = useCustomersStore((s) => s.pageSize);
@@ -45,6 +43,11 @@ export const CustomerPage = () => {
   const setEnd = useCustomersStore((s) => s.setEnd);
   const start = useCustomersStore((s) => s.start);
   const end = useCustomersStore((s) => s.end);
+  const getCustomers = useCustomersStore((s) => s.getCustomers);
+  const createCustomer = useCustomersStore((s) => s.createCustomer);
+  const setEditId = useCustomersStore((s) => s.setEditId);
+  const updateCustomer = useCustomersStore((s) => s.updateCustomer);
+  const isLoading = useCustomersStore((s) => s.isLoading);
 
   const selectOptions: { value: string; name: string }[] = [
     {
@@ -57,24 +60,11 @@ export const CustomerPage = () => {
     },
   ];
 
-  const [customerDetails, setCustomerDetails] = React.useState(
-    editCustomer ?? {
-      name: "",
-      phone: "",
-      location: "",
-      status: true,
-      id: "",
-    },
-  );
-
-  console.log("editCustomer", editCustomer);
-  console.log("customerDetails", customerDetails);
-
   React.useEffect(() => {
-    if (editCustomer) {
-      setCustomerDetails(editCustomer);
+    if (customer) {
+      setCustomer?.("all", customer);
     } else {
-      setCustomerDetails({
+      setCustomer?.("all", {
         name: "",
         phone: "",
         location: "",
@@ -82,26 +72,46 @@ export const CustomerPage = () => {
         id: "",
       });
     }
-  }, [editCustomer, editOpen]);
+  }, [customer, editOpen, setCustomer]);
 
-  function handleAddCustomer(newCustomer: {
-    name: string;
-    phone: string;
-    location: string;
-    designation?: string;
-    status: boolean;
-    id?: string;
-  }) {
-    setCustomer(newCustomer);
+  function handleAddCustomer(
+    newCustomer: {
+      name: string;
+      phone: string;
+      location: string;
+      designation?: string;
+      status: boolean;
+      id?: string;
+    } | null,
+  ) {
+    if (newCustomer !== null) {
+      createCustomer(newCustomer);
+      setCustomer?.("all", {
+        name: "",
+        phone: "",
+        location: "",
+        status: true,
+        id: "",
+      });
+    }
   }
   const filteredCustomers = customers
     .filter((customer) =>
       customer.name.toLowerCase().includes(searchQuery.toLowerCase()),
     )
-    .slice(start, end); // Limit to 10 for pagination
+    .slice(start, end);
+
   function handleLimitChange(newLimit: string) {
     setPageSize(parseInt(newLimit, 10));
   }
+
+  React.useEffect(() => {
+    getCustomers();
+  }, [getCustomers]);
+
+  React.useEffect(() => {
+    setPage(1);
+  }, [customers.length, setPage]);
 
   React.useEffect(() => {
     const start = (page - 1) * pageSize;
@@ -122,7 +132,16 @@ export const CustomerPage = () => {
             className="max-w-72"
           />
           <ButtonComponent
-            onClick={() => setAddOpen(true)}
+            onClick={() => {
+              setCustomer?.("all", {
+                name: "",
+                phone: "",
+                location: "",
+                status: true,
+                id: "",
+              });
+              setAddOpen(true);
+            }}
             className="flex items-center gap-x-2"
           >
             <CirclePlus className="w-5 h-5" />
@@ -133,11 +152,13 @@ export const CustomerPage = () => {
           tableHeaders={tableHeaders}
           tableBody={filteredCustomers}
           onEdit={(e) => {
-            setEditCustomer?.(e);
+            setCustomer?.("all", e);
+            setEditId?.(e?.id);
             setEditOpen(true);
           }}
           onDelete={(id) => deleteCustomer?.(id)}
           className="h-[calc(100dvh-15rem)]"
+          loading={isLoading}
         />
         <PaginationComponent
           currentPage={page}
@@ -148,7 +169,7 @@ export const CustomerPage = () => {
         />
       </div>
       <ModalFormComponent
-        memberDetails={customerDetails}
+        memberDetails={customer}
         heading="Add New Customer"
         rightButtonLabel="Add Employee"
         modalOpen={addOpen}
@@ -156,26 +177,28 @@ export const CustomerPage = () => {
         handleAddMember={handleAddCustomer}
       >
         <CustomerForm
-          customerDetails={customerDetails}
+          customerDetails={customer}
           selectOptions={selectOptions}
-          setCustomerDetails={setCustomerDetails}
+          setCustomerDetails={setCustomer}
         />
       </ModalFormComponent>
       <ModalFormComponent
-        memberDetails={customerDetails}
+        memberDetails={customer}
         heading="Edit Customer"
         rightButtonLabel="Update Customer"
-        editMember={editCustomer}
+        editMember={customer}
         handleEditMember={(e) => {
-          handleEditCustomer?.(e);
+          if (e !== null) {
+            updateCustomer?.(e);
+          }
         }}
         modalOpen={editOpen}
         setModalOpen={setEditOpen}
       >
         <CustomerForm
-          customerDetails={customerDetails}
+          customerDetails={customer}
           selectOptions={selectOptions}
-          setCustomerDetails={setCustomerDetails}
+          setCustomerDetails={setCustomer}
         />
       </ModalFormComponent>
     </div>

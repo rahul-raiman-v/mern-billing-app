@@ -31,10 +31,6 @@ export const TableComponent = ({
   noDatas?: React.ReactNode;
   className?: string;
 }) => {
-  React.useEffect(() => {
-    console.log("Table Body", tableBody);
-  }, [tableBody, onDelete, onEdit]);
-
   return (
     <div className={cn("border rounded-lg border-gray-300 ", className)}>
       <div className="grid grid-cols-7 gap-x-2 px-3 py-4 rounded-lg bg-[#f2f3f7] ">
@@ -106,7 +102,6 @@ export const TableComponent = ({
                     color="#546470"
                     className="cursor-pointer"
                     onClick={() => {
-                      console.log("Edit Employee", employee);
                       onEdit?.(employee);
                     }}
                   />

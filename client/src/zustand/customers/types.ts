@@ -12,13 +12,21 @@ export interface CustomersStore {
   pageSize: number;
   start: number;
   end: number;
-  editCustomer?: Customer | null;
-  setCustomer: (customer: Customer) => void;
+  customer: Customer | null;
+  editId?: string | null;
+  isLoading?: boolean;
+  setIsLoading?: (isLoading: boolean) => void;
   setPage: (page: number) => void;
   setPageSize: (pageSize: number) => void;
   setStart: (start: number) => void;
   setEnd: (end: number) => void;
-  deleteCustomer?: (id: string) => void;
-  setEditCustomer?: (customer: Customer | null) => void;
-  handleEditCustomer?: (updatedCustomer: Customer) => void;
+  deleteCustomer?: (id: string) => Promise<void>;
+  setCustomer?: (
+    key: string,
+    value: Customer | null | string | boolean,
+  ) => void;
+  getCustomers: () => Promise<void>;
+  createCustomer: (customer: Customer) => Promise<void>;
+  setEditId?: (id?: string) => void;
+  updateCustomer?: (customer: Customer) => Promise<void>;
 }

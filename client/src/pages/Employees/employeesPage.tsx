@@ -35,9 +35,6 @@ export const EmployeesPage = () => {
   const employees = useEmployeesStore((s) => s.employees);
   const setEmployee = useEmployeesStore((s) => s.setEmployee);
   const deleteEmployee = useEmployeesStore((s) => s.deleteEmployee);
-  const setEditEmployee = useEmployeesStore((s) => s.setEditEmployee);
-  const editEmployee = useEmployeesStore((s) => s.editEmployee);
-  const handleEditEmployee = useEmployeesStore((s) => s.handleEditEmployee);
   const page = useEmployeesStore((s) => s.page);
   const setPage = useEmployeesStore((s) => s.setPage);
   const pageSize = useEmployeesStore((s) => s.pageSize);
@@ -46,9 +43,17 @@ export const EmployeesPage = () => {
   const setEnd = useEmployeesStore((s) => s.setEnd);
   const start = useEmployeesStore((s) => s.start);
   const end = useEmployeesStore((s) => s.end);
+  const createEmployee = useEmployeesStore((s) => s.createEmployee);
+  const updateEmployee = useEmployeesStore((s) => s.updateEmployee);
+  const getEmployees = useEmployeesStore((s) => s.getEmployees);
+  const employee = useEmployeesStore((s) => s.employee);
+  const setEditEmployeeId = useEmployeesStore((s) => s.setEditEmployeeId);
+  const isLoading = useEmployeesStore((s) => s.isLoading);
 
-  function handleAddEmployee(newCustomer: Employee) {
-    setEmployee(newCustomer);
+  function handleAddEmployee(newCustomer: Employee | null) {
+    if (newCustomer !== null) {
+      createEmployee?.(newCustomer);
+    }
   }
   const filteredCustomers = employees
     .filter((customer) =>
@@ -70,22 +75,11 @@ export const EmployeesPage = () => {
     },
   ];
 
-  const [employeeDetails, setEmployeeDetails] = React.useState(
-    editEmployee ?? {
-      name: "",
-      phone: "",
-      location: "",
-      designation: "",
-      status: true,
-      id: "",
-    },
-  );
-
   React.useEffect(() => {
-    if (editEmployee) {
-      setEmployeeDetails(editEmployee);
+    if (employee) {
+      setEmployee("all", employee);
     } else {
-      setEmployeeDetails({
+      setEmployee("all", {
         name: "",
         phone: "",
         location: "",
@@ -94,7 +88,11 @@ export const EmployeesPage = () => {
         id: "",
       });
     }
-  }, [editEmployee]);
+  }, [employee, setEmployee]);
+
+  React.useEffect(() => {
+    getEmployees();
+  }, [getEmployees]);
 
   React.useEffect(() => {
     const start = (page - 1) * pageSize;
@@ -115,7 +113,17 @@ export const EmployeesPage = () => {
             className="max-w-72 "
           />
           <ButtonComponent
-            onClick={() => setAddOpen(true)}
+            onClick={() => {
+              setEmployee("all", {
+                name: "",
+                phone: "",
+                location: "",
+                designation: "",
+                status: true,
+                id: "",
+              });
+              setAddOpen(true);
+            }}
             className="flex items-center gap-x-2"
           >
             <CirclePlus className="w-5 h-5" />
@@ -126,11 +134,13 @@ export const EmployeesPage = () => {
           tableHeaders={tableHeaders}
           tableBody={filteredCustomers}
           onEdit={(e) => {
-            setEditEmployee?.(e);
             setEditOpen(true);
+            setEditEmployeeId?.(e?.id);
+            setEmployee("all", e);
           }}
           onDelete={(id) => deleteEmployee?.(id)}
           className="h-[calc(100dvh-15rem)]"
+          loading={isLoading}
         />
         <PaginationComponent
           currentPage={page}
@@ -142,31 +152,35 @@ export const EmployeesPage = () => {
       </div>
       <ModalFormComponent
         heading="Add Employee"
-        memberDetails={employeeDetails}
+        memberDetails={employee}
         rightButtonLabel="Add Employee"
         modalOpen={addOpen}
         setModalOpen={setAddOpen}
         handleAddMember={handleAddEmployee}
       >
         <EmployeeForm
-          customerDetails={employeeDetails}
+          customerDetails={employee}
           selectOptions={selectOptions}
-          setCustomerDetails={setEmployeeDetails}
+          setCustomerDetails={setEmployee}
         />
       </ModalFormComponent>
       <ModalFormComponent
-        memberDetails={employeeDetails}
+        memberDetails={employee}
         heading="Edit Employee"
         rightButtonLabel="Update Employee"
-        editMember={editEmployee}
-        handleEditMember={handleEditEmployee}
+        editMember={employee}
+        handleEditMember={(e) => {
+          if (e !== null) {
+            updateEmployee?.(e);
+          }
+        }}
         modalOpen={editOpen}
         setModalOpen={setEditOpen}
       >
         <EmployeeForm
-          customerDetails={employeeDetails}
+          customerDetails={employee}
           selectOptions={selectOptions}
-          setCustomerDetails={setEmployeeDetails}
+          setCustomerDetails={setEmployee}
         />
       </ModalFormComponent>
     </div>

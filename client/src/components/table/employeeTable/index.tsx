@@ -2,7 +2,7 @@ import type { Employee } from "../../../pages/Employees/employeesPage";
 import { NoEmployees } from "../../../assets/noEmployees";
 import { cn } from "../../../lib/utils";
 import { SquarePen, Trash2 } from "lucide-react";
-import React from "react";
+import { LoaderComponent } from "../../loader";
 
 export const EmployeeTable = ({
   tableHeaders,
@@ -10,6 +10,7 @@ export const EmployeeTable = ({
   onDelete,
   onEdit,
   className = "",
+  loading = false,
 }: {
   tableHeaders: string[];
   tableBody: {
@@ -23,11 +24,8 @@ export const EmployeeTable = ({
   onEdit?: (i: Employee) => void;
   onDelete?: (employeeId: string) => void;
   className?: string;
+  loading?: boolean;
 }) => {
-  React.useEffect(() => {
-    console.log("Table Body", tableBody);
-  }, [tableBody, onDelete, onEdit]);
-
   return (
     <div className={cn("border rounded-lg border-gray-300 ", className)}>
       <div className="grid grid-cols-7 gap-x-2 px-3 py-4 rounded-lg bg-[#f2f3f7] ">
@@ -40,12 +38,15 @@ export const EmployeeTable = ({
         })}
       </div>
       <div className=" h-full overflow-y-auto">
-        {tableBody.length === 0 && (
-          <div className="text-gray-500 flex flex-col items-center justify-center my-auto h-full font-semibold text-lg">
-            <NoEmployees className="size-96" />
-            <p className="text-gray-500 text-center">No Employees Found</p>
-          </div>
-        )}
+        {tableBody.length === 0 &&
+          (loading ? (
+            <LoaderComponent />
+          ) : (
+            <div className="text-gray-500 flex flex-col items-center justify-center my-auto h-full font-semibold text-lg">
+              <NoEmployees className="size-96" />
+              <p className="text-gray-500 text-center">No Employees Found</p>
+            </div>
+          ))}
         <div>
           {tableBody.map((employee, index) => {
             return (
@@ -85,7 +86,6 @@ export const EmployeeTable = ({
                     color="#546470"
                     className="cursor-pointer"
                     onClick={() => {
-                      console.log("Edit Employee", employee);
                       onEdit?.(employee);
                     }}
                   />

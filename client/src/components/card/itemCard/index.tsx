@@ -11,14 +11,14 @@ export const ItemCard = ({
 }: {
   item: {
     id: string;
-    title: string;
+    name: string;
     image: string;
-    price: {
-      piecePrice?: string;
-      rollPrice?: string;
-      packPrice?: string;
-    };
+    price: number;
     quantity: number;
+    units: {
+      name: string;
+      conversionFactor: number;
+    }[];
   };
 
   isPreview?: boolean;
@@ -26,14 +26,14 @@ export const ItemCard = ({
   onDelete?: (i: string) => void;
   onEdit?: (i: {
     id: string;
-    title: string;
+    name: string;
     image: string;
-    price: {
-      piecePrice?: string;
-      rollPrice?: string;
-      packPrice?: string;
-    };
+    price: number;
     quantity: number;
+    units: {
+      name: string;
+      conversionFactor: number;
+    }[];
   }) => void;
 }) => {
   return (
@@ -44,9 +44,9 @@ export const ItemCard = ({
         className="h-24 w-44 rounded-lg"
       />
       <div className="flex justify-between items-center">
-        <p className="font-semibold">{item.title}</p>
+        <p className="font-semibold">{item.name}</p>
         <span className={cn("text-black font-semibold", isPreview && "hidden")}>
-          ${item.price.piecePrice}
+          ${item.price}
         </span>
       </div>
       <div className="flex items-center -ml-1">
@@ -103,7 +103,7 @@ export const ItemCard = ({
         <span
           className={cn("text-black font-semibold", !isPreview && "hidden")}
         >
-          ${item.price.piecePrice}
+          ${item.price}
         </span>
         <div className="flex items-center gap-x-1">
           <SquarePen

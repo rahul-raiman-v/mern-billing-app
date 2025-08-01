@@ -16,14 +16,16 @@ export const ModalFormComponent = ({
 }: {
   modalOpen: boolean;
   setModalOpen: (i: boolean) => void;
-  handleAddMember?: (newCustomer: {
-    name: string;
-    phone: string;
-    location: string;
-    designation?: string;
-    status: boolean;
-    id?: string;
-  }) => void;
+  handleAddMember?: (
+    newCustomer: {
+      name: string;
+      phone: string;
+      location: string;
+      designation?: string;
+      status: boolean;
+      id?: string;
+    } | null,
+  ) => void;
   editMember?: {
     name: string;
     phone: string;
@@ -32,14 +34,16 @@ export const ModalFormComponent = ({
     status: boolean;
     id?: string;
   } | null;
-  handleEditMember?: (updatedCustomer: {
-    name: string;
-    phone: string;
-    location: string;
-    designation?: string;
-    status: boolean;
-    id?: string;
-  }) => void;
+  handleEditMember?: (
+    updatedCustomer: {
+      name: string;
+      phone: string;
+      location: string;
+      designation?: string;
+      status: boolean;
+      id?: string;
+    } | null,
+  ) => void;
   heading: string;
   leftButtonLabel?: string;
   rightButtonLabel?: string;
@@ -59,7 +63,7 @@ export const ModalFormComponent = ({
     designation?: string;
     status: boolean;
     id?: string;
-  };
+  } | null;
 }) => {
   return (
     <div>

@@ -1,3 +1,4 @@
+import { capitalizeFirstLetter } from "../../../lib/utils";
 import { SelectComponent } from "../../orders/selectComponent";
 import { Input } from "../../ui";
 import { FileInput } from "lucide-react";
@@ -8,26 +9,35 @@ interface ItemsFormProps {
   selectOptions: { value: string; name: string }[];
   itemDetails: {
     id: string;
-    title: string;
-    price: {
-      piecePrice?: string;
-      packPrice?: string;
-      rollPrice?: string;
-    };
+    name: string;
+    price: number;
     image: string;
     quantity: number;
-  };
-  setItemDetails: (e: {
-    id: string;
-    title: string;
-    price: {
-      piecePrice?: string;
-      packPrice?: string;
-      rollPrice?: string;
-    };
-    image: string;
-    quantity: number;
-  }) => void;
+    units: {
+      name: string;
+      conversionFactor: number;
+    }[];
+  } | null;
+  setItemDetails: (
+    key: string,
+    e:
+      | {
+          id: string;
+          name: string;
+          price: number;
+          image: string;
+          quantity: number;
+          units: {
+            name: string;
+            conversionFactor: number;
+          }[];
+        }
+      | null
+      | string
+      | boolean
+      | { name: string; conversionFactor: number }[]
+      | number,
+  ) => void;
 }
 export const ItemsForm = ({
   selectOptions,
@@ -37,21 +47,32 @@ export const ItemsForm = ({
   setItemDetails,
 }: ItemsFormProps) => {
   const getUnitPrice = (unit: string) => {
+    const pieceUnit = itemDetails?.units?.find((units) => units.name === unit);
     switch (unit) {
       case "piece":
         return (
           <div className="w-full">
-            <p className="font-medium">Piece Price</p>
+            <p className="font-medium">
+              {capitalizeFirstLetter(pieceUnit?.name)}
+            </p>
             <Input
               type="text"
               className="border border-gray-300 p-2 rounded w-full"
-              placeholder="Item Price"
-              value={itemDetails.price.piecePrice}
+              placeholder="Enter units"
+              value={pieceUnit?.conversionFactor}
               onChange={(e) =>
-                setItemDetails({
-                  ...itemDetails,
-                  price: { ...itemDetails.price, piecePrice: e.target.value },
-                })
+                setItemDetails(
+                  "units",
+                  itemDetails?.units?.map((units) => {
+                    if (units?.name === "piece") {
+                      return {
+                        ...units,
+                        conversionFactor: Number(e.target.value),
+                      };
+                    }
+                    return units;
+                  }) ?? [],
+                )
               }
             />
           </div>
@@ -59,17 +80,27 @@ export const ItemsForm = ({
       case "roll":
         return (
           <div className="w-full">
-            <p className="font-medium">Roll Price</p>
+            <p className="font-medium">
+              {capitalizeFirstLetter(pieceUnit?.name)}
+            </p>
             <Input
               type="text"
               className="border border-gray-300 p-2 rounded w-full"
-              placeholder="Item Price"
-              value={itemDetails.price.rollPrice}
+              placeholder="Enter units"
+              value={pieceUnit?.conversionFactor}
               onChange={(e) =>
-                setItemDetails({
-                  ...itemDetails,
-                  price: { ...itemDetails.price, rollPrice: e.target.value },
-                })
+                setItemDetails(
+                  "units",
+                  itemDetails?.units?.map((units) => {
+                    if (units?.name === "roll") {
+                      return {
+                        ...units,
+                        conversionFactor: Number(e.target.value),
+                      };
+                    }
+                    return units;
+                  }) ?? [],
+                )
               }
             />
           </div>
@@ -77,17 +108,27 @@ export const ItemsForm = ({
       case "pack":
         return (
           <div className="w-full">
-            <p className="font-medium">Pack Price</p>
+            <p className="font-medium">
+              {capitalizeFirstLetter(pieceUnit?.name)}
+            </p>
             <Input
               type="text"
               className="border border-gray-300 p-2 rounded w-full"
-              placeholder="Item Price"
-              value={itemDetails.price.packPrice}
+              placeholder="Enter units"
+              value={pieceUnit?.conversionFactor}
               onChange={(e) =>
-                setItemDetails({
-                  ...itemDetails,
-                  price: { ...itemDetails.price, packPrice: e.target.value },
-                })
+                setItemDetails(
+                  "units",
+                  itemDetails?.units?.map((units) => {
+                    if (units?.name === "pack") {
+                      return {
+                        ...units,
+                        conversionFactor: Number(e.target.value),
+                      };
+                    }
+                    return units;
+                  }) ?? [],
+                )
               }
             />
           </div>
@@ -110,15 +151,23 @@ export const ItemsForm = ({
         </div>
       </div>
       <div>
+        <p className="font-medium">Item Id</p>
+        <Input
+          type="text"
+          className="w-full"
+          placeholder="Item Id"
+          value={itemDetails?.id}
+          onChange={(e) => setItemDetails("id", e.target.value)}
+        />
+      </div>
+      <div>
         <p className="font-medium">Item Name</p>
         <Input
           type="text"
           className="w-full"
           placeholder="Item Title"
-          value={itemDetails.title}
-          onChange={(e) =>
-            setItemDetails({ ...itemDetails, title: e.target.value })
-          }
+          value={itemDetails?.name}
+          onChange={(e) => setItemDetails("name", e.target.value)}
         />
       </div>
       <div>
@@ -126,11 +175,19 @@ export const ItemsForm = ({
         <Input
           type="text"
           className="w-full"
-          placeholder="Item Title"
-          value={itemDetails.quantity}
-          onChange={(e) =>
-            setItemDetails({ ...itemDetails, quantity: Number(e.target.value) })
-          }
+          placeholder="Item Quantity"
+          value={itemDetails?.quantity}
+          onChange={(e) => setItemDetails("quantity", Number(e.target.value))}
+        />
+      </div>
+      <div>
+        <p className="font-medium">Price</p>
+        <Input
+          type="text"
+          className="w-full"
+          placeholder="Item Price"
+          value={itemDetails?.price}
+          onChange={(e) => setItemDetails("price", Number(e.target.value))}
         />
       </div>
       <div className="flex items-center gap-x-4 w-full">

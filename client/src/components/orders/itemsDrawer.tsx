@@ -1,8 +1,6 @@
 import React from "react";
 import { Input } from "../ui";
 import { CircleX } from "lucide-react";
-import { items } from "../../data/items";
-import { ItemCard } from "../card/itemCard";
 import { ButtonComponent } from "../button";
 
 export const ItemsDrawer = () => {
@@ -36,11 +34,11 @@ export const ItemsDrawer = () => {
             <div>
               <Input placeholder="Search Item" className="w-full mb-4" />
             </div>
-            <div className="flex flex-wrap gap-4">
+            {/* <div className="flex flex-wrap gap-4">
               {items.map((item) => (
                 <ItemCard key={item.id} item={item} />
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
       )}

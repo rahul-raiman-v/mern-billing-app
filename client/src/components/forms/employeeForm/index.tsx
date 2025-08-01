@@ -13,15 +13,22 @@ export const EmployeeForm = ({
     status: boolean;
     designation?: string;
     id?: string;
-  };
-  setCustomerDetails: (e: {
-    id?: string;
-    name: string;
-    phone: string;
-    location: string;
-    designation?: string;
-    status: boolean;
-  }) => void;
+  } | null;
+  setCustomerDetails: (
+    key: string,
+    e:
+      | {
+          id?: string;
+          name: string;
+          phone: string;
+          location: string;
+          designation?: string;
+          status: boolean;
+        }
+      | null
+      | string
+      | boolean,
+  ) => void;
   selectOptions: { value: string; name: string }[];
 }) => {
   return (
@@ -30,13 +37,8 @@ export const EmployeeForm = ({
         <p className="font-semibold text-gray-700">Employee Id</p>
         <InputComponent
           type="text"
-          value={customerDetails.id}
-          onChange={(e) =>
-            setCustomerDetails({
-              ...customerDetails,
-              id: e.target.value,
-            })
-          }
+          value={customerDetails?.id}
+          onChange={(e) => setCustomerDetails("id", e.target.value)}
           className=""
           placeholder="Enter Employee Id"
         />
@@ -45,13 +47,8 @@ export const EmployeeForm = ({
         <p className="font-semibold text-gray-700">Employee Name</p>
         <InputComponent
           type="text"
-          value={customerDetails.name}
-          onChange={(e) =>
-            setCustomerDetails({
-              ...customerDetails,
-              name: e.target.value,
-            })
-          }
+          value={customerDetails?.name}
+          onChange={(e) => setCustomerDetails("name", e.target.value)}
           className=""
           placeholder="Enter Employee"
         />
@@ -60,13 +57,8 @@ export const EmployeeForm = ({
         <p className="font-semibold text-gray-700">Phone Number</p>
         <InputComponent
           type="text"
-          value={customerDetails.phone}
-          onChange={(e) =>
-            setCustomerDetails({
-              ...customerDetails,
-              phone: e.target.value,
-            })
-          }
+          value={customerDetails?.phone}
+          onChange={(e) => setCustomerDetails("phone", e.target.value)}
           className=""
           placeholder="Enter Phone Number"
         />
@@ -75,13 +67,8 @@ export const EmployeeForm = ({
         <p className="font-semibold text-gray-700">Location</p>
         <InputComponent
           type="text"
-          value={customerDetails.location}
-          onChange={(e) =>
-            setCustomerDetails({
-              ...customerDetails,
-              location: e.target.value,
-            })
-          }
+          value={customerDetails?.location}
+          onChange={(e) => setCustomerDetails("location", e.target.value)}
           className=""
           placeholder="Enter Location"
         />
@@ -90,13 +77,8 @@ export const EmployeeForm = ({
         <p className="font-semibold text-gray-700">Designation</p>
         <InputComponent
           type="text"
-          value={customerDetails.designation}
-          onChange={(e) =>
-            setCustomerDetails({
-              ...customerDetails,
-              designation: e.target.value,
-            })
-          }
+          value={customerDetails?.designation}
+          onChange={(e) => setCustomerDetails("designation", e.target.value)}
           className=""
           placeholder="Enter Designation"
         />
@@ -105,12 +87,9 @@ export const EmployeeForm = ({
         <p className="font-semibold text-gray-700">Status</p>
         <SelectComponent
           selectItems={selectOptions}
-          value={customerDetails.status ? "active" : "inactive"}
+          value={customerDetails?.status ? "active" : "inactive"}
           onValueChange={(value) =>
-            setCustomerDetails({
-              ...customerDetails,
-              status: value === "active",
-            })
+            setCustomerDetails("status", value === "active")
           }
           className="border border-gray-300 p-2 w-full rounded"
           placeholder="Enter Status"
