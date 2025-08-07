@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 @config "../tailwind.config.js";
 
 @tailwind base;
@@ -119,10 +120,27 @@
   }
 }
 
+* {
+  font-family: "Inter", sans-serif;
+}
+
 .no-scroll {
   scrollbar-width: none;
 }
 
 .no-scroll::-webkit-scrollbar {
   display: none;
+}
+
+.scrollbar-tiny::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-tiny::-webkit-scrollbar-track {
+  border-radius: 6px;
+}
+
+.scrollbar-tiny::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #6a7282;
 }
