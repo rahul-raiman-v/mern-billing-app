@@ -1,33 +1,15 @@
-import { InputComponent } from "../../input";
-import { SelectComponent } from "../../orders/selectComponent";
+import type { Member } from "../../../types";
+import { InputComponent, SelectComponent } from "../../../components";
 
 export const EmployeeForm = ({
   customerDetails,
   setCustomerDetails,
   selectOptions,
 }: {
-  customerDetails: {
-    name: string;
-    phone: string;
-    location: string;
-    status: boolean;
-    designation?: string;
-    id?: string;
-  } | null;
+  customerDetails: Member | null;
   setCustomerDetails: (
     key: string,
-    e:
-      | {
-          id?: string;
-          name: string;
-          phone: string;
-          location: string;
-          designation?: string;
-          status: boolean;
-        }
-      | null
-      | string
-      | boolean,
+    e: Member | null | string | boolean,
   ) => void;
   selectOptions: { value: string; name: string }[];
 }) => {

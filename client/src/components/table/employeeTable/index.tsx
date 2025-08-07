@@ -1,8 +1,8 @@
-import type { Employee } from "../../../pages/Employees/employeesPage";
-import { NoEmployees } from "../../../assets/noEmployees";
-import { cn } from "../../../lib/utils";
+import { NoEmployees } from "../../../assets";
+import { cn } from "../../../lib";
 import { SquarePen, Trash2 } from "lucide-react";
-import { LoaderComponent } from "../../loader";
+import { LoaderComponent } from "../../../components";
+import type { Member } from "../../../types";
 
 export const EmployeeTable = ({
   tableHeaders,
@@ -13,15 +13,8 @@ export const EmployeeTable = ({
   loading = false,
 }: {
   tableHeaders: string[];
-  tableBody: {
-    name: string;
-    phone: string;
-    location: string;
-    designation?: string;
-    status: boolean;
-    id?: string;
-  }[];
-  onEdit?: (i: Employee) => void;
+  tableBody: Member[];
+  onEdit?: (i: Member) => void;
   onDelete?: (employeeId: string) => void;
   className?: string;
   loading?: boolean;

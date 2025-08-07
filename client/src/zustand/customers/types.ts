@@ -1,18 +1,12 @@
-export interface Customer {
-  name: string;
-  phone: string;
-  location: string;
-  status: boolean;
-  id?: string; // Optional field for Customer ID
-}
+import type { Member } from "../../types";
 
 export interface CustomersStore {
-  customers: Customer[];
+  customers: Member[];
   page: number;
   pageSize: number;
   start: number;
   end: number;
-  customer: Customer | null;
+  customer: Member | null;
   editId?: string | null;
   isLoading?: boolean;
   setIsLoading?: (isLoading: boolean) => void;
@@ -21,12 +15,9 @@ export interface CustomersStore {
   setStart: (start: number) => void;
   setEnd: (end: number) => void;
   deleteCustomer?: (id: string) => Promise<void>;
-  setCustomer?: (
-    key: string,
-    value: Customer | null | string | boolean,
-  ) => void;
+  setCustomer?: (key: string, value: Member | null | string | boolean) => void;
   getCustomers: () => Promise<void>;
-  createCustomer: (customer: Customer) => Promise<void>;
+  createCustomer: (customer: Member) => Promise<void>;
   setEditId?: (id?: string) => void;
-  updateCustomer?: (customer: Customer) => Promise<void>;
+  updateCustomer?: (customer: Member) => Promise<void>;
 }

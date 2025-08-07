@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import type { EmployeesStore } from "./types";
-import type { Employee } from "../../pages/Customers";
 import { axiosInstance } from "../../lib/axios";
 import toast from "react-hot-toast";
+import type { Member } from "../../types";
 
 export const useEmployeesStore = create<EmployeesStore>((set, get) => ({
   employees: [],
@@ -15,10 +15,10 @@ export const useEmployeesStore = create<EmployeesStore>((set, get) => ({
   setIsLoading: (isLoading) => set({ isLoading }),
   setEmployee: (key, value) => {
     if (key === "all") {
-      set({ employee: value as Employee });
+      set({ employee: value as Member });
     } else {
       set((state) => ({
-        employee: { ...state.employee, [key]: value } as Employee,
+        employee: { ...state.employee, [key]: value } as Member,
       }));
     }
   },

@@ -1,7 +1,8 @@
-import { LoaderComponent } from "../../loader";
-import { NoEmployees } from "../../../assets/noEmployees";
-import { cn } from "../../../lib/utils";
+import { LoaderComponent } from "../../../components";
+import { NoEmployees } from "../../../assets";
+import { cn } from "../../../lib";
 import { SquarePen, Trash2 } from "lucide-react";
+import type { Member } from "../../../types";
 
 export const CustomerTable = ({
   tableHeaders,
@@ -12,20 +13,8 @@ export const CustomerTable = ({
   className = "",
 }: {
   tableHeaders: string[];
-  tableBody: {
-    name: string;
-    phone: string;
-    location: string;
-    status: boolean;
-    id?: string;
-  }[];
-  onEdit?: (i: {
-    name: string;
-    phone: string;
-    location: string;
-    status: boolean;
-    id?: string;
-  }) => void;
+  tableBody: Member[];
+  onEdit?: (i: Member) => void;
   onDelete?: (employeeId: string) => void;
   loading?: boolean;
   className?: string;
@@ -65,17 +54,17 @@ export const CustomerTable = ({
                     {employee.id}
                   </p>
                 )}
-                {employee.name.trim() !== "" && (
+                {employee.name?.trim() !== "" && (
                   <p className="text-gray-800 font-semibold text-ellipsis overflow-hidden whitespace-nowrap">
                     {employee.name}
                   </p>
                 )}
-                {employee.phone.trim() !== "" && (
+                {employee.phone?.trim() !== "" && (
                   <p className="text-gray-800 font-semibold text-ellipsis overflow-hidden whitespace-nowrap">
                     {employee.phone}
                   </p>
                 )}
-                {employee.location.trim() !== "" && (
+                {employee.location?.trim() !== "" && (
                   <p className="text-gray-800 font-semibold text-ellipsis overflow-hidden whitespace-nowrap">
                     {employee.location}
                   </p>

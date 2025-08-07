@@ -1,12 +1,15 @@
 import { CirclePlus, Search } from "lucide-react";
 import React from "react";
 import { useCustomersStore } from "../../zustand";
-import { InputComponent } from "../../components/input";
-import { ButtonComponent } from "../../components/button";
-import { ModalFormComponent } from "../../components/modals/formModal";
-import { CustomerTable } from "../../components/table/customerTable";
-import { CustomerForm } from "../../components/forms/customerForm";
-import { PaginationComponent } from "../../components/pagination";
+import type { Member } from "../../types";
+import {
+  ButtonComponent,
+  CustomerForm,
+  CustomerTable,
+  InputComponent,
+  ModalFormComponent,
+  PaginationComponent,
+} from "../../components";
 
 export interface Employee {
   name: string;
@@ -74,16 +77,7 @@ export const CustomerPage = () => {
     }
   }, [customer, editOpen, setCustomer]);
 
-  function handleAddCustomer(
-    newCustomer: {
-      name: string;
-      phone: string;
-      location: string;
-      designation?: string;
-      status: boolean;
-      id?: string;
-    } | null,
-  ) {
+  function handleAddCustomer(newCustomer: Member | null) {
     if (newCustomer !== null) {
       createCustomer(newCustomer);
       setCustomer?.("all", {
@@ -97,7 +91,7 @@ export const CustomerPage = () => {
   }
   const filteredCustomers = customers
     .filter((customer) =>
-      customer.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      customer.name?.toLowerCase().includes(searchQuery.toLowerCase()),
     )
     .slice(start, end);
 

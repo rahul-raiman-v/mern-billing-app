@@ -1,0 +1,9 @@
+export { CustomersImage } from "./customers";
+export { EmployeesImage } from "./employees";
+export { InvoicesImage } from "./invoices";
+export { LogoutImage } from "./logout";
+export { NoDatas } from "./noData";
+export { NoEmployees } from "./noEmployees";
+export { PurchasesImage } from "./purchase";
+export { ReportsImage } from "./reports";
+export { SalesImage } from "./sales";

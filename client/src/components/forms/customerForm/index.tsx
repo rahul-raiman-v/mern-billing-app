@@ -1,18 +1,12 @@
-import { SelectComponent } from "../../orders/selectComponent";
-import { InputComponent } from "../../input";
+import { InputComponent, SelectComponent } from "../../../components";
+import type { Member } from "../../../types";
 
 export const CustomerForm = ({
   customerDetails,
   setCustomerDetails,
   selectOptions,
 }: {
-  customerDetails: {
-    name: string;
-    phone: string;
-    location: string;
-    status: boolean;
-    id?: string;
-  } | null;
+  customerDetails: Member | null;
   setCustomerDetails?: (
     key: string,
     e:

@@ -1,6 +1,6 @@
 import { CircleArrowLeft, CircleArrowRight } from "lucide-react";
-import { SelectComponent } from "../orders/selectComponent";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib";
+import { SelectComponent } from "../../components";
 
 export const PaginationComponent = ({
   limit,

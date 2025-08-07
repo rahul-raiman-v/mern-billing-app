@@ -1,4 +1,4 @@
-import { ButtonComponent } from "../../button";
+import { ButtonComponent } from "../../../components";
 import React from "react";
 
 export const ItemsModal = ({

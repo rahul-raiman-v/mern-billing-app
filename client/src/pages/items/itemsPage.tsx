@@ -1,15 +1,17 @@
 import React from "react";
 import { CirclePlus, Search } from "lucide-react";
-import { ItemCard } from "../../components/card/itemCard";
-import { InputComponent } from "../../components/input";
-import { ButtonComponent } from "../../components/button";
-import { ItemsModal } from "../../components/modals/itemsModal";
-import { ItemsForm } from "../../components/forms/itemsForm";
-import { useItemsStore } from "../../zustand/items";
+import { useItemsStore } from "../../zustand";
 import toast from "react-hot-toast";
-import type { Items } from "../../zustand/items/types";
-import { NoDatas } from "../../assets/noData";
-import { LoaderComponent } from "../../components/loader";
+import { NoDatas } from "../../assets";
+import type { Items } from "../../types";
+import {
+  ButtonComponent,
+  InputComponent,
+  ItemCard,
+  ItemsForm,
+  ItemsModal,
+  LoaderComponent,
+} from "../../components";
 
 export const ItemsPage = () => {
   const [modalOpen, setModalOpen] = React.useState(false);

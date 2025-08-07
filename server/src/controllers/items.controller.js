@@ -1,9 +1,12 @@
 import { Item } from "../models/items.model.js";
+import cloudianry from '../lib/cloudinary.js'
+
 
 export async function createItem(req,res){
     try {
         const {name,id,price,quantity,image,units} = req.body;
-        const item = await Item({name,id,price,quantity,image,units});
+        const uploadResponse = await cloudianry.uploader.upload(image);
+        const item = await Item({name,id,price,quantity,image : uploadResponse.secure_url,units});
         await item.save();
         res.json({message:"Item created successfully",item});
     } catch (error) {
@@ -32,7 +35,10 @@ export async function deleteItem(req,res){
 
 export async function updateItem(req,res){
     try {
-        await Item.updateOne({id:req.params.id},req.body);
+        const {name,id,price,quantity,image,units} = req.body;
+       
+        const uploadResponse = await cloudianry.uploader.upload(image); 
+        await Item.updateOne({id:req.params.id},{name,id,price,quantity,image:uploadResponse.secure_url,units});
         res.json({message:"Item updated successfully"});
     } catch (error) {
         console.log(error);

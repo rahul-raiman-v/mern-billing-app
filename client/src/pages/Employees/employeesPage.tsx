@@ -1,21 +1,15 @@
 import { CirclePlus, Search } from "lucide-react";
 import React from "react";
 import { useEmployeesStore } from "../../zustand";
-import { InputComponent } from "../../components/input";
-import { ModalFormComponent } from "../../components/modals/formModal";
-import { EmployeeForm } from "../../components/forms/employeeForm";
-import { ButtonComponent } from "../../components/button";
-import { EmployeeTable } from "../../components/table/employeeTable";
-import { PaginationComponent } from "../../components/pagination";
-
-export interface Employee {
-  name: string;
-  phone: string;
-  location: string;
-  designation?: string;
-  status: boolean;
-  id?: string;
-}
+import type { Member } from "../../types";
+import {
+  ButtonComponent,
+  EmployeeForm,
+  EmployeeTable,
+  InputComponent,
+  ModalFormComponent,
+  PaginationComponent,
+} from "../../components";
 
 export const EmployeesPage = () => {
   const [addOpen, setAddOpen] = React.useState(false);
@@ -50,14 +44,14 @@ export const EmployeesPage = () => {
   const setEditEmployeeId = useEmployeesStore((s) => s.setEditEmployeeId);
   const isLoading = useEmployeesStore((s) => s.isLoading);
 
-  function handleAddEmployee(newCustomer: Employee | null) {
+  function handleAddEmployee(newCustomer: null | Member) {
     if (newCustomer !== null) {
       createEmployee?.(newCustomer);
     }
   }
   const filteredCustomers = employees
     .filter((customer) =>
-      customer.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      customer.name?.toLowerCase().includes(searchQuery.toLowerCase()),
     )
     .slice(start, end); // Limit to 10 for pagination
   function handleLimitChange(newLimit: string) {

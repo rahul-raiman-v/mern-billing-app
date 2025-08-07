@@ -1,7 +1,9 @@
 import { create } from "zustand";
-import type { Items, ItemsStore } from "./types";
+import type { ItemsStore } from "./types";
 import { axiosInstance } from "../../lib/axios";
 import toast from "react-hot-toast";
+import type { Items } from "../../types";
+
 export const useItemsStore = create<ItemsStore>((set, get) => ({
   items: [],
   item: {

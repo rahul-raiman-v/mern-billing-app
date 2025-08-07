@@ -1,7 +1,8 @@
 import { create } from "zustand";
-import type { Customer, CustomersStore } from "./types";
+import type { CustomersStore } from "./types";
 import { axiosInstance } from "../../lib/axios";
 import toast from "react-hot-toast";
+import type { Member } from "../../types";
 
 export const useCustomersStore = create<CustomersStore>((set, get) => ({
   customers: [],
@@ -36,10 +37,10 @@ export const useCustomersStore = create<CustomersStore>((set, get) => ({
   },
   setCustomer: (key, value) => {
     if (key === "all") {
-      set({ customer: value as Customer });
+      set({ customer: value as Member });
     } else {
       set((state) => ({
-        customer: { ...state.customer, [key]: value } as Customer,
+        customer: { ...state.customer, [key]: value } as Member,
       }));
     }
   },

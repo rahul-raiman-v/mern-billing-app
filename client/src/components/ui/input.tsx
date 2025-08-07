@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib";
 interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement>,
     React.ComponentProps<"input"> {
@@ -20,7 +20,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {startContent && <span className="mt-0.5">{startContent}</span>}
         <input
           type={type}
-          className="w-full bg-transparent outline-none"
+          className={`w-full bg-transparent outline-none h-full ${type === "file" ? "file:cursor-pointer" : ""}`}
           ref={ref}
           {...props}
         />

@@ -5,3 +5,5 @@ export * from "./calendar";
 export * from "./skeleton";
 export * from "./sonner";
 export * from "./select";
+export * from "./popover";
+export * from "./tooltip";

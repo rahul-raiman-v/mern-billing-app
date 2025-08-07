@@ -1,14 +1,4 @@
-export interface Items {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  quantity: number;
-  units: {
-    name: string;
-    conversionFactor: number;
-  }[];
-}
+import type { Items } from "../../types";
 
 export interface ItemsStore {
   items: Items[];

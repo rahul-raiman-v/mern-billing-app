@@ -1,37 +1,18 @@
-import { capitalizeFirstLetter } from "../../../lib/utils";
-import { SelectComponent } from "../../orders/selectComponent";
-import { Input } from "../../ui";
+import React from "react";
+import { capitalizeFirstLetter } from "../../../lib";
 import { FileInput } from "lucide-react";
+import type { Items } from "../../../types";
+import { InputComponent, SelectComponent } from "../../../components";
 
 interface ItemsFormProps {
   unit: string;
   setUnit: (i: string) => void;
   selectOptions: { value: string; name: string }[];
-  itemDetails: {
-    id: string;
-    name: string;
-    price: number;
-    image: string;
-    quantity: number;
-    units: {
-      name: string;
-      conversionFactor: number;
-    }[];
-  } | null;
+  itemDetails: Items | null;
   setItemDetails: (
     key: string,
     e:
-      | {
-          id: string;
-          name: string;
-          price: number;
-          image: string;
-          quantity: number;
-          units: {
-            name: string;
-            conversionFactor: number;
-          }[];
-        }
+      | Items
       | null
       | string
       | boolean
@@ -55,7 +36,7 @@ export const ItemsForm = ({
             <p className="font-medium">
               {capitalizeFirstLetter(pieceUnit?.name)}
             </p>
-            <Input
+            <InputComponent
               type="text"
               className="border border-gray-300 p-2 rounded w-full"
               placeholder="Enter units"
@@ -83,7 +64,7 @@ export const ItemsForm = ({
             <p className="font-medium">
               {capitalizeFirstLetter(pieceUnit?.name)}
             </p>
-            <Input
+            <InputComponent
               type="text"
               className="border border-gray-300 p-2 rounded w-full"
               placeholder="Enter units"
@@ -111,7 +92,7 @@ export const ItemsForm = ({
             <p className="font-medium">
               {capitalizeFirstLetter(pieceUnit?.name)}
             </p>
-            <Input
+            <InputComponent
               type="text"
               className="border border-gray-300 p-2 rounded w-full"
               placeholder="Enter units"
@@ -137,22 +118,46 @@ export const ItemsForm = ({
         return null;
     }
   };
+
+  function handleImage(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        setItemDetails("image", reader.result as string);
+      };
+    }
+  }
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col-reverse items-center ">
         <p className="font-medium">Image</p>
-        <div className="relative border border-gray-300 p-4 rounded-full w-fit flex items-center justify-center">
-          <FileInput size={32} color="#4783d1" />
-          <Input
-            type="file"
-            accept="image/jpeg, image/png"
-            className="border border-gray-300 p-2 rounded w-full absolute h-full top-0 left-0 opacity-0 cursor-pointer"
-          />
-        </div>
+        {itemDetails?.image.trim() !== "" ? (
+          <div className="relative border border-gray-300 rounded-lg w-fit flex items-center justify-center">
+            <img src={itemDetails?.image} alt="" className="size-16" />
+            <InputComponent
+              type="file"
+              accept="image/jpeg, image/png"
+              className="border border-gray-300 p-2 rounded w-full absolute h-full top-0 left-0 opacity-0"
+              onChange={handleImage}
+            />
+          </div>
+        ) : (
+          <div className="relative border border-gray-300 p-4 rounded-lg w-fit flex items-center justify-center">
+            <FileInput size={32} color="#4783d1" />
+            <InputComponent
+              type="file"
+              accept="image/jpeg, image/png"
+              className="border border-gray-300 p-2 rounded w-full absolute h-full top-0 left-0 opacity-0 cursor-pointer"
+              onChange={handleImage}
+            />
+          </div>
+        )}
       </div>
       <div>
         <p className="font-medium">Item Id</p>
-        <Input
+        <InputComponent
           type="text"
           className="w-full"
           placeholder="Item Id"
@@ -162,7 +167,7 @@ export const ItemsForm = ({
       </div>
       <div>
         <p className="font-medium">Item Name</p>
-        <Input
+        <InputComponent
           type="text"
           className="w-full"
           placeholder="Item Title"
@@ -172,7 +177,7 @@ export const ItemsForm = ({
       </div>
       <div>
         <p className="font-medium">Quantity</p>
-        <Input
+        <InputComponent
           type="text"
           className="w-full"
           placeholder="Item Quantity"
@@ -182,7 +187,7 @@ export const ItemsForm = ({
       </div>
       <div>
         <p className="font-medium">Price</p>
-        <Input
+        <InputComponent
           type="text"
           className="w-full"
           placeholder="Item Price"

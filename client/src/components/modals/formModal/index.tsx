@@ -1,4 +1,5 @@
-import { ButtonComponent } from "../../button";
+import type { Member } from "../../../types";
+import { ButtonComponent } from "../../../components";
 import React from "react";
 
 export const ModalFormComponent = ({
@@ -16,34 +17,9 @@ export const ModalFormComponent = ({
 }: {
   modalOpen: boolean;
   setModalOpen: (i: boolean) => void;
-  handleAddMember?: (
-    newCustomer: {
-      name: string;
-      phone: string;
-      location: string;
-      designation?: string;
-      status: boolean;
-      id?: string;
-    } | null,
-  ) => void;
-  editMember?: {
-    name: string;
-    phone: string;
-    location: string;
-    designation?: string;
-    status: boolean;
-    id?: string;
-  } | null;
-  handleEditMember?: (
-    updatedCustomer: {
-      name: string;
-      phone: string;
-      location: string;
-      designation?: string;
-      status: boolean;
-      id?: string;
-    } | null,
-  ) => void;
+  handleAddMember?: (newCustomer: Member | null) => void;
+  editMember?: Member | null;
+  handleEditMember?: (updatedCustomer: Member | null) => void;
   heading: string;
   leftButtonLabel?: string;
   rightButtonLabel?: string;
@@ -56,14 +32,7 @@ export const ModalFormComponent = ({
     status: boolean;
     id?: string;
   }) => void;
-  memberDetails: {
-    name: string;
-    phone: string;
-    location: string;
-    designation?: string;
-    status: boolean;
-    id?: string;
-  } | null;
+  memberDetails: Member | null;
 }) => {
   return (
     <div>

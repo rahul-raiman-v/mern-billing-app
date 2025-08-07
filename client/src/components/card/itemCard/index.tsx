@@ -1,6 +1,7 @@
 import { SquarePen, Trash2 } from "lucide-react";
 import { ButtonComponent } from "../../button";
-import { cn } from "../../..//lib/utils";
+import { cn } from "../../..//lib";
+import type { Items } from "../../../types";
 
 export const ItemCard = ({
   item,
@@ -8,38 +9,19 @@ export const ItemCard = ({
   setModalOpen,
   onDelete,
   onEdit,
+  handleAddButton,
 }: {
-  item: {
-    id: string;
-    name: string;
-    image: string;
-    price: number;
-    quantity: number;
-    units: {
-      name: string;
-      conversionFactor: number;
-    }[];
-  };
-
+  item: Items;
   isPreview?: boolean;
   setModalOpen?: (i: boolean) => void;
   onDelete?: (i: string) => void;
-  onEdit?: (i: {
-    id: string;
-    name: string;
-    image: string;
-    price: number;
-    quantity: number;
-    units: {
-      name: string;
-      conversionFactor: number;
-    }[];
-  }) => void;
+  onEdit?: (i: Items) => void;
+  handleAddButton?: (item: Items) => void;
 }) => {
   return (
     <div className="flex flex-col gap-2 p-3 border border-gray-300 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow duration-200 h-fit w-fit">
       <img
-        src={item.image.trim() === "" ? "sample.jpg" : item.image}
+        src={item.image.trim() === "" ? "/sample.jpg" : item.image}
         alt="sample"
         className="h-24 w-44 rounded-lg"
       />
@@ -128,7 +110,12 @@ export const ItemCard = ({
             isPreview && "hidden",
           )}
         >
-          <ButtonComponent className="w-full">Add to Cart</ButtonComponent>
+          <ButtonComponent
+            className="w-full"
+            onClick={() => handleAddButton?.({ ...item, quantity: 1 })}
+          >
+            Add to Cart
+          </ButtonComponent>
         </div>
       </div>
     </div>
